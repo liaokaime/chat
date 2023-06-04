@@ -1,0 +1,15 @@
+{
+  "name": "chat",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "concurrently \"yarn run start-frontend\" \"yarn run start-backend\" ",
+    "start-frontend": "yarn workspace chat-frontend run start",
+    "start-backend": "yarn workspace chat-backend run start"
+  },
+  "dependencies": {
+    "concurrently": "^8.0.1"
+  }
+}
