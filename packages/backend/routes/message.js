@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const { Message, ChatRoom } = require('../models');
 const authenticateToken = require("../authenticateToken");
+const { Op } = require('sequelize');
 
 router.post('/chatrooms/:id/messages', authenticateToken, async (req, res) => {
     try {
@@ -62,5 +63,33 @@ router.delete('/messages/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ message: 'Something went wrong: ' + error.message });
     }
 });
+
+router.get('/chatrooms/:id/messages/after/:timestamp', async (req, res) => {
+    try {
+        const { id, timestamp } = req.params;
+
+        if (!timestamp) {
+            return res.status(400).json({ message: 'Timestamp is required.' });
+        }
+
+        // Sequelize 使用的是 UTC 时间，因此需要将时间戳转换为 Date 对象
+        const lastUpdate = new Date(parseInt(timestamp));
+
+        const messages = await Message.findAll({
+            where: {
+                chatroomId: id,
+                createdAt: {
+                    // 使用 Sequelize 的 Op.gte 操作符来获取在指定时间之后创建的所有消息
+                    [Op.gte]: lastUpdate
+                }
+            }
+        });
+
+        res.json(messages);
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong: ' + error.message });
+    }
+});
+
 
 module.exports = router;

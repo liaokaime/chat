@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var massageRouter = require('./routes/message');
+var chatroomsRouter = require('./routes/chatrooms');
 
 var app = express();
 
@@ -20,6 +22,8 @@ app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/message', massageRouter);
+app.use('/chatroom', chatroomsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

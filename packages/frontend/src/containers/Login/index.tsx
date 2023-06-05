@@ -1,18 +1,12 @@
 import React from "react"
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    IconButton,
-    styled,
-    TextField
-} from "@mui/material"
+import {Box, Button, Card, CardContent, CardHeader, IconButton, styled, TextField} from "@mui/material"
 import LockIcon from "@mui/icons-material/Lock"
 import {useNavigate} from "react-router"
 import {useForm} from "react-hook-form"
 import {ErrorMessage} from "@hookform/error-message"
+import {useMutation} from "@tanstack/react-query";
+import axios from "axios";
+import {enqueueSnackbar} from "notistack";
 
 export default function Index() {
     const navigate = useNavigate()
@@ -21,12 +15,22 @@ export default function Index() {
         formState: {errors},
         handleSubmit
     } = useForm<Form>()
-    const login = handleSubmit((data) => {
-        console.log(data)
-        navigate("/main")
+    const {mutate} = useMutation({
+        mutationKey: ["login"],
+        mutationFn: (params: unknown) => axios.post("/users/login", params),
+        onSuccess: (data: any) => {
+            navigate("/main")
+            enqueueSnackbar("登录成功", {variant: "success"})
+        }
     })
-    const identify = () => {
-        navigate("/identify")
+    const login = handleSubmit((data) => {
+        mutate({
+            username: data.account,
+            password: data.password,
+        })
+    })
+    const signUp = () => {
+        navigate("/sign-up")
     }
     return (
         <Container>
@@ -59,13 +63,14 @@ export default function Index() {
                         helperText={<ErrorMessage errors={errors} name={"password"} />}
                     />
                     <Box sx={{width: "100%", display: "flex", mt: 4}}>
+                        <Button onClick={signUp}>注册账号</Button>
                         <Button
                             sx={{ml: "auto", px: 4}}
                             variant={"contained"}
                             disableElevation
                             onClick={login}
                         >
-                            登录
+                            进入
                         </Button>
                     </Box>
                 </CardContent>

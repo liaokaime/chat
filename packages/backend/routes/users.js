@@ -65,9 +65,9 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/self', authenticateToken, async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
 
     // 获取用户信息
     const user = await User.findByPk(id);
@@ -84,19 +84,21 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
-
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
 
+    // 获取用户信息
     const user = await User.findByPk(id);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });
     }
 
-    res.json(user);
+    // 返回用户信息
+    res.status(200).json(user);
   } catch (error) {
+    // 如果出错，返回错误信息
     res.status(500).json({ message: 'Something went wrong: ' + error.message });
   }
 });

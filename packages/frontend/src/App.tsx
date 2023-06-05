@@ -11,22 +11,30 @@ import "@fontsource/roboto/500.css"
 import "@fontsource/roboto/700.css"
 import theme from "./utils/styles/theme"
 import GlobalCss from "./utils/styles/GlobalCss"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import AxiosProvider from "./utils/AxiosProvider";
 
+const queryClient = new QueryClient()
 
 function App() {
-  return (
-      <ReduxProvider store={store}>
-        <ThemeProvider theme={theme}>
-          <SnackbarProvider>
-            <BrowserRouter >
-                <CssBaseline />
-                <GlobalCss />
-                <Container />
+    return (
+        <ReduxProvider store={store}>
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <AxiosProvider>
+                            <SnackbarProvider disableWindowBlurListener={true}>
+                                <CssBaseline/>
+                                <GlobalCss/>
+                                <Container/>
+                                <SnackbarProvider/>
+                            </SnackbarProvider>
+                        </AxiosProvider>
+                    </QueryClientProvider>
+                </ThemeProvider>
             </BrowserRouter>
-          </SnackbarProvider>
-        </ThemeProvider>
-      </ReduxProvider>
-  );
+        </ReduxProvider>
+    );
 }
 
 export default App;

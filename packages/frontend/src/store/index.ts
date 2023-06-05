@@ -2,9 +2,10 @@ import {configureStore} from "@reduxjs/toolkit"
 // import notifier from "./utils/notification/store"
 import {useSelector} from "react-redux"
 import {combineReducers} from "redux"
+import {LoginInfoStore} from "./loginInfo";
 
 const rootReducer = combineReducers({
-    // notifier
+    loginInfo: LoginInfoStore.reducer
 })
 
 export const store = configureStore({
