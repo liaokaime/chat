@@ -13,6 +13,14 @@ ChatRoom.init({
         allowNull: false,
         unique: true,
     },
+    creatorId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'User', // 'User' refers to the table name
+            key: 'id',
+        },
+    },
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -25,7 +33,7 @@ ChatRoom.init({
 }, {
     sequelize,
     modelName: 'ChatRoom',
-    tableName: 'Chatroom',
+    tableName: 'ChatRoom',
     timestamps: false,
 });
 module.exports = { ChatRoom };

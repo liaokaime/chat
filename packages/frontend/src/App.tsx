@@ -14,7 +14,13 @@ import GlobalCss from "./utils/styles/GlobalCss"
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import AxiosProvider from "./utils/AxiosProvider";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: false
+        }
+    }
+})
 
 function App() {
     return (

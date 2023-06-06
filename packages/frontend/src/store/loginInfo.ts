@@ -17,6 +17,9 @@ export const LoginInfoStore = createSlice({
     reducers: {
         setLoginInfo: (state, action: PayloadAction<tUser>) => {
             state.user = action.payload
-        }
+        },
+        clearLoginInfo: (state, action: PayloadAction) => {
+            state.user = {} as tUser
+        },
     }
 })

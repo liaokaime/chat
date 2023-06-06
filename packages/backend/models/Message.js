@@ -29,7 +29,7 @@ Message.init({
 }, {
     sequelize,
     modelName: 'Message',
-    tableName: 'Messages',
+    tableName: 'Message',
     timestamps: false,
 });
 

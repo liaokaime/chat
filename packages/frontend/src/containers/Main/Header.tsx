@@ -29,6 +29,8 @@ type tProps = {
 type tForm = Pick<tUser, "username" | "password" | "email">
 
 export default function ({title}: tProps) {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const user = useRedux(state => state.loginInfo.user)
     const {username, password, email, id} = user
     const popupState = usePopupState({variant: 'dialog'})
@@ -42,7 +44,6 @@ export default function ({title}: tProps) {
             })
         }
     }, [popupState.isOpen])
-    const dispatch = useDispatch()
     const {refetch} = useQuery({
         queryKey: ["header", "self"],
         queryFn: () => axios.get("/users/self") as Promise<tUser>,
@@ -59,6 +60,16 @@ export default function ({title}: tProps) {
             refetch()
             enqueueSnackbar("更新成功", {variant: "success"})
             popupState.close()
+        }
+    })
+    const {mutate: deleteUser} = useMutation({
+        mutationKey: ["header", "delete"],
+        mutationFn: () => axios.delete("/users/" + id),
+        onSuccess: (data) => {
+            enqueueSnackbar("删除成功", {variant: "success"})
+            popupState.close()
+            dispatch(LoginInfoStore.actions.clearLoginInfo())
+            navigate("/login")
         }
     })
     const onUpdate = handleSubmit((data) => {
@@ -128,6 +139,7 @@ export default function ({title}: tProps) {
                 </Stack>
             </DialogContent>
             <DialogActions>
+                <Button onClick={() => deleteUser()} color={"error"} sx={{mr: "auto", ml: 2}}>删除账号</Button>
                 <Button onClick={popupState.close}>取消</Button>
                 <Button onClick={onUpdate} autoFocus disabled={!isDirty || isLoading}>
                     更新
