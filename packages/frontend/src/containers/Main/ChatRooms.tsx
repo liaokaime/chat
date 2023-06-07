@@ -137,7 +137,7 @@ export default function () {
                                         setValue("roomName", chatroom.name)
                                         setRoomId(chatroom.id)
                                     }}
-                                >更新</Button>}
+                                >编辑</Button>}
                             </CardActions>
                         </Card>
                     </Grid>
@@ -192,7 +192,7 @@ export default function () {
             <DialogActions>
                 <Button onClick={popupStateCreate.close}>取消</Button>
                 <Button onClick={onUpdateRoom} autoFocus>
-                    确认
+                    更新
                 </Button>
             </DialogActions>
         </Dialog>

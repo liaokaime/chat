@@ -3,24 +3,24 @@ var router = express.Router();
 const { Message, ChatRoom } = require('../models');
 const authenticateToken = require("../authenticateToken");
 const { Op } = require('sequelize');
+const {User} = require("../models/User");
 
 router.post('/chatrooms/:id/messages', authenticateToken, async (req, res) => {
     try {
-        const chatroomId = req.params.id;
+        const chatroom_id = req.params.id;
         const { content } = req.body;
 
-        const chatroom = await ChatRoom.findByPk(chatroomId);
+        const chatroom = await ChatRoom.findByPk(chatroom_id);
 
         if (!chatroom) {
             return res.status(404).json({ message: 'Chatroom not found.' });
         }
 
         const message = await Message.create({
-            userId: req.user.id,
-            chatroomId,
+            user_id: req.user.id,
+            chatroom_id,
             content
         });
-
         res.status(201).json(message);
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong: ' + error.message });
@@ -29,13 +29,26 @@ router.post('/chatrooms/:id/messages', authenticateToken, async (req, res) => {
 
 router.get('/chatrooms/:id/messages', authenticateToken, async (req, res) => {
     try {
-        const chatroomId = req.params.id;
+        const chatroom_id = req.params.id;
+        const user_id = req.user.id; // 获取当前用户的ID
 
         const messages = await Message.findAll({
-            where: { chatroomId }
+            where: { chatroom_id },
+            include: [
+                {
+                    model: User,
+                    attributes: ['username'], // 获取发送者的用户名
+                }
+            ]
         });
 
-        res.json(messages);
+        // 添加 'isMine' 字段来判断消息是否由当前用户发送
+        const messagesWithSender = messages.map(message => {
+            const isMine = message.user_id === user_id;
+            return { ...message.get(), isMine, senderName: message.User.username };
+        });
+
+        res.json(messagesWithSender);
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong: ' + error.message });
     }
@@ -52,7 +65,7 @@ router.delete('/messages/:id', authenticateToken, async (req, res) => {
             return res.status(404).json({ message: 'Message not found.' });
         }
 
-        if (message.userId !== req.user.id) {
+        if (message.user_id !== req.user.id) {
             return res.status(403).json({ message: 'You can only delete your own messages.' });
         }
 
@@ -77,7 +90,7 @@ router.get('/chatrooms/:id/messages/after/:timestamp', async (req, res) => {
 
         const messages = await Message.findAll({
             where: {
-                chatroomId: id,
+                chatroom_id: id,
                 createdAt: {
                     // 使用 Sequelize 的 Op.gte 操作符来获取在指定时间之后创建的所有消息
                     [Op.gte]: lastUpdate

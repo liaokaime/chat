@@ -24,11 +24,12 @@ import {ErrorMessage} from "@hookform/error-message";
 
 type tProps = {
     title: string
+    iconButton?: React.ReactNode
 }
 
 type tForm = Pick<tUser, "username" | "password" | "email">
 
-export default function ({title}: tProps) {
+export default function ({title, iconButton}: tProps) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const user = useRedux(state => state.loginInfo.user)
@@ -81,7 +82,8 @@ export default function ({title}: tProps) {
     return <React.Fragment>
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                {iconButton}
+                <Typography variant="h6" component="div" sx={{flexGrow: 1, ml: 1}}>
                     {title}
                 </Typography>
                 <IconButton sx={{p: 0}} onClick={popupState.open}>
@@ -140,6 +142,10 @@ export default function ({title}: tProps) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => deleteUser()} color={"error"} sx={{mr: "auto", ml: 2}}>删除账号</Button>
+                <Button onClick={() => {
+                    navigate("/login")
+                    popupState.close()
+                }} color={"warning"}>退出登录</Button>
                 <Button onClick={popupState.close}>取消</Button>
                 <Button onClick={onUpdate} autoFocus disabled={!isDirty || isLoading}>
                     更新
