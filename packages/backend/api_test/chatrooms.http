@@ -1,0 +1,32 @@
+### Create a new chatroom
+POST {{base_url}}/chatroom HTTP/1.1
+content-type: application/json
+
+{
+  "name": "your_chatroom_name"
+}
+
+###
+
+### Retrieve all chatrooms
+GET {{base_url}}/chatroom HTTP/1.1
+
+###
+
+### Retrieve a specific chatroom
+GET {{base_url}}/chatroom/{{chatroom_id}} HTTP/1.1
+
+###
+
+### Update a specific chatroom
+PUT {{base_url}}/chatroom/{{chatroom_id}} HTTP/1.1
+content-type: application/json
+
+{
+  "name": "new_chatroom_name"
+}
+
+###
+
+### Delete a specific chatroom
+DELETE {{base_url}}/chatroom/{{chatroom_id}} HTTP/1.1

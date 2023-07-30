@@ -1,0 +1,47 @@
+### Register a new user
+POST {{base_url}}/users/register HTTP/1.1
+content-type: application/json
+
+{
+  "username": "your_username",
+  "password": "your_password",
+  "email": "your_email"
+}
+
+###
+
+### User login
+POST {{base_url}}/users/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+
+###
+
+### Retrieve current user's info
+GET {{base_url}}/users/self HTTP/1.1
+
+###
+
+### Retrieve a specific user's info
+GET {{base_url}}/users/{{user_id}} HTTP/1.1
+
+###
+
+### Update a specific user's info
+PUT {{base_url}}/users/{{user_id}} HTTP/1.1
+content-type: application/json
+
+{
+  "username": "new_username",
+  "password": "new_password",
+  "email": "new_email"
+}
+
+###
+
+### Delete a specific user's profile
+DELETE {{base_url}}/users/{{user_id}} HTTP/1.1

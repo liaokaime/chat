@@ -1,0 +1,22 @@
+### Post a message in a chatroom
+POST {{base_url}}/message/chatrooms/{{chatroom_id}}/messages HTTP/1.1
+content-type: application/json
+
+{
+  "content": "your_message"
+}
+
+###
+
+### Retrieve all messages in a chatroom
+GET {{base_url}}/message/chatrooms/{{chatroom_id}}/messages HTTP/1.1
+
+###
+
+### Delete a specific message
+DELETE {{base_url}}/message/messages/{{message_id}} HTTP/1.1
+
+###
+
+### Retrieve messages in a chatroom after a specific timestamp
+GET {{base_url}}/message/chatrooms/{{chatroom_id}}/messages/after/{{timestamp}} HTTP/1.1
