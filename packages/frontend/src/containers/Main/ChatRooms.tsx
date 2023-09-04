@@ -190,7 +190,7 @@ export default function () {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={popupStateCreate.close}>取消</Button>
+                <Button onClick={popupStateUpdate.close}>取消</Button>
                 <Button onClick={onUpdateRoom} autoFocus>
                     更新
                 </Button>
